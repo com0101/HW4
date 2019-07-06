@@ -31,11 +31,12 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class MarsProperty(
-        val id: String,
+        @Json(name = "id") val id: String,
         // used to map img_src from the JSON to imgSrcUrl in our class
         @Json(name = "img_src") val imgSrcUrl: String,
-        val type: String,
-        val price: Double) : Parcelable {
+        @Json(name = "type")val type: String,
+        @Json(name = "price")val price: Double) : Parcelable {
     val isRental
         get() = type == "rent"
+
 }

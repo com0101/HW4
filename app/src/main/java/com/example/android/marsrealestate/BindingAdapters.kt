@@ -17,6 +17,7 @@
 
 package com.example.android.marsrealestate
 
+import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,6 +29,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.android.marsrealestate.network.MarsProperty
 import com.example.android.marsrealestate.overview.MarsApiStatus
 import com.example.android.marsrealestate.overview.PhotoGridAdapter
+import java.text.DecimalFormat
+import java.util.*
+import kotlin.math.roundToInt
 
 /**
  * When there is no Mars property data (data is null), hide the [RecyclerView], otherwise show it.
@@ -35,7 +39,7 @@ import com.example.android.marsrealestate.overview.PhotoGridAdapter
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<MarsProperty>?) {
     val adapter = recyclerView.adapter as PhotoGridAdapter
-    adapter.submitList(data)
+    adapter.addHeaderAndSubmitList(data)
 }
 
 /**
@@ -53,6 +57,42 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
                 .into(imgView)
     }
 }
+@BindingAdapter("typeUrl")
+ fun bindtype(typeView:TextView,typeUrl: String?) {
+    typeUrl?.let {
+        val typeUri = typeUrl.toUri().buildUpon().build()
+        var tp = typeUri.toString()
+        if(tp=="buy"){
+            tp="Sale"
+        }else{
+            tp="Rent"
+        }
+        typeView.text = "For "+tp
+    }
+}
+@BindingAdapter("mUrl")
+fun bindm(mView:TextView,mUrl: String?) {
+    mUrl?.let {
+        val mUri = mUrl.toUri().buildUpon().build()
+        var tp = mUri.toString()
+        if(tp=="rent") {
+            mView.text ="/month"
+        }else{
+            mView.text =""
+        }
+    }
+}
+@BindingAdapter("priceUrl")
+fun TextView.bindprice( priceUrl: Double?) {
+    priceUrl?.let {
+        var priceView =this.findViewById(R.id.price_value_text) as TextView
+        var df= DecimalFormat("$,###")
+        var pc = df.format(priceUrl)
+         priceView.text = pc
+    }
+}
+
+
 
 /**
  * This binding adapter displays the [MarsApiStatus] of the network request in an image view.  When
